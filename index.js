@@ -2,6 +2,7 @@ import express from "express";
 import { configDotenv } from "dotenv";
 import connectDB from "./Database/db.js";
 import authRouter from "./Routes/authRoutes.js";
+import cors from "cors";
 
 const app = express();
 
@@ -9,7 +10,7 @@ const app = express();
 configDotenv();
 
 // cors middleware
-
+app.use(cors());
 
 
 // auth middleware
