@@ -32,7 +32,7 @@ app.use("/api/users", authRouter);
 
 // Home route
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json({ message: "Welcome to the authentication API" });
 });
 
 
