@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealChat Test</title>
+</head>
+<body>
+  <h1>RealChat Test</h1>
+
+  <input type="text" id="userId" placeholder="Enter your user ID" />
+  <button id="joinBtn">Join Chat</button>
+  
+  <br><br>
+  <input type="text" id="receiverId" placeholder="Receiver ID" />
+  <input type="text" id="messageText" placeholder="Enter your message" />
+  <button id="sendMessageBtn">Send Message</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:3000'); // Change port if necessary
+
+    // Join chat
+    document.getElementById('joinBtn').onclick = () => {
+      const userId = document.getElementById('userId').value;
+      if (userId) {
+        socket.emit('join', userId);
+        console.log('Joined as user: ', userId);
+        alert(`Successfully joined as user: ${userId}`);
+      } else {
+        alert('Please enter a valid user ID.');
+      }
+    };
+
+    // Send message
+    document.getElementById('sendMessageBtn').onclick = () => {
+      const senderId = document.getElementById('userId').value;
+      const receiverId = document.getElementById('receiverId').value;
+      const messageText = document.getElementById('messageText').value;
+
+      if (senderId && receiverId && messageText) {
+        const message = {
+          senderId: senderId,
+          receiverId: receiverId,
+          text: messageText, // Updated to match the backend structure
+          timestamp: new Date()
+        };
+        socket.emit('sendmessage', message);
+        console.log('Message sent: ', message);
+        alert('Message sent successfully!');
+      } else {
+        alert('Please fill in all fields.');
+      }
+    };
+
+    // Listen for incoming messages
+    socket.on('message', (message) => {
+      console.log('Received message: ', message);
+      alert(`Message from ${message.senderId}: ${message.text}`); // Updated to match the backend structure
+    });
+  </script>
+</body>
+</html>

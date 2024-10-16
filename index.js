@@ -3,47 +3,49 @@ import { configDotenv } from "dotenv";
 import connectDB from "./Database/db.js";
 import authRouter from "./Routes/authRoutes.js";
 import cors from "cors";
+import { createServer } from 'http';
+import initializeSocket from "./Utils/socket.js";
 
-const app = express();
 
-// Load environment variables
+
+// Load environment variables early
 configDotenv();
 
-// cors middleware
-app.use(cors());
+// Create express app
+const app = express();
+
+app.use(cors({
+  origin: '*', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
+  credentials: true // Allow credentials
+}));
+
+// Create HTTP server
+const server = createServer(app);
+initializeSocket(server);
 
 
-// auth middleware
+// Middleware
 
-
-
-
-
-
-// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 
 // Routes
 app.use("/api/users", authRouter);
 
-
-
 // Home route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the authentication API" });
+  res.json("Welcome to the authentication API");
 });
 
-
-
+// Connect to DB and start server
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`server is ruuning on the port ${process.env.PORT}
-        address: http://localhost:${process.env.PORT}`);
+    const PORT = process.env.PORT || 5000;
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.log("DB Connection Error:", error);
   });

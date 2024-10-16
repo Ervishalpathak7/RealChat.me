@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../Schemas/User.js'; // Ensure the correct path to your User model
+import User from '../Schemas/User.js';
 
 // Middleware to check if the user is authenticated
 export const authenticateUser = async (req, res, next) => {
