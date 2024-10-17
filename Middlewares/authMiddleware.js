@@ -2,8 +2,9 @@ import { verifyToken } from '../Utils/Jwt.js';
 
 
 const useAuth = (req, res, next) => {
-    const token = req.cookies.authToken;
-
+   
+    // Get the token from the request cookies
+    const token = req.cookies?.authToken
     if (!token) {
         return res.status(401).json({ error: "Unauthorized: No token provided" });
     }
@@ -15,9 +16,12 @@ const useAuth = (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: Invalid token" });
         }
 
+      
+
         // Attach the user to the request object
         req.user = user;
-        next(); // Move to the next middleware/route handler
+        console.log("User:", req.user , "user");
+        next(); 
 
     } catch (error) {
         return res.status(401).json({ error: "Unauthorized: Token verification failed" });

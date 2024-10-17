@@ -139,13 +139,16 @@ export const loginUser = async (req, res) => {
     res
       .status(200)
       .cookie("authToken", token, {
-        httpOnly: true
+        httpOnly: true, // Helps prevent XSS attacks
+        secure: process.env.NODE_ENV === "production", // Use true if you're in production
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
       })
       .json({
         user: {
           id: user._id,
         },
       });
+
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -154,17 +157,17 @@ export const loginUser = async (req, res) => {
 // check auth status of user
 export const checkAuth = (req, res) => {
   const user = req.user;
-
+  console.log(user , 'user');
   // Check if user object exists
   if (!user) {
     return res.status(401).json({ error: "Unauthorized: No user found" });
   }
 
   // Return user information if authenticated
-  res.status(200).json({
+  res.status(200)
+  .json({
     user: {
-      id: user._id,
-      email: user.email,
+      id: user.id,
     },
   });
 };

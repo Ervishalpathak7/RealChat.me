@@ -5,6 +5,7 @@ import authRouter from "./Routes/authRoutes.js";
 import cors from "cors";
 import { createServer } from 'http';
 import initializeSocket from "./Utils/socket.js";
+import cookieParser from "cookie-parser";
 
 
 
@@ -14,11 +15,16 @@ configDotenv();
 // Create express app
 const app = express();
 
+
+// Enable CORS
 app.use(cors({
-  origin: '*', // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
-  credentials: true // Allow credentials
+  origin: 'http://localhost:5173',
+  credentials: true,
 }));
+
+
+// cookie parser
+app.use(cookieParser());
 
 // Create HTTP server
 const server = createServer(app);
