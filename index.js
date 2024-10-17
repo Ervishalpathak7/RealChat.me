@@ -17,11 +17,12 @@ const app = express();
 
 
 // Enable CORS
-app.use(cors({
-  origin: "*",
-  credentials: true,
-}));
 
+
+app.use(cors({
+  origin: process.env.CLIENT_URL,  // Specify the exact allowed origin
+  credentials: true,  // Allow credentials such as cookies, authorization headers
+}));
 
 // cookie parser
 app.use(cookieParser());
