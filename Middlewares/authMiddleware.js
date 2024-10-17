@@ -1,22 +1,27 @@
-import jwt from 'jsonwebtoken';
-import User from '../Schemas/User.js';
+import { verifyToken } from '../Utils/Jwt.js';
 
-// Middleware to check if the user is authenticated
-export const authenticateUser = async (req, res, next) => {
-    const token = req.cookies.authToken || req.headers['authorization']?.split(' ')[1];
+
+const useAuth = (req, res, next) => {
+    const token = req.cookies.authToken;
 
     if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+        return res.status(401).json({ error: "Unauthorized: No token provided" });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded.id);
-        if (!req.user) {
-            return res.status(401).json({ message: 'User not found' });
+        // Verify the token
+        const user = verifyToken(token);
+        if (!user) {
+            return res.status(401).json({ error: "Unauthorized: Invalid token" });
         }
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'Invalid token' });
+
+        // Attach the user to the request object
+        req.user = user;
+        next(); // Move to the next middleware/route handler
+
+    } catch (error) {
+        return res.status(401).json({ error: "Unauthorized: Token verification failed" });
     }
 };
+
+export default useAuth;

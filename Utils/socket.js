@@ -37,17 +37,17 @@ export const initializeSocket = (httpServer) => {
       }
 
       // Save the message to the database
-    //   try {
-    //     const newMessage = new Message({
-    //       senderId,
-    //       receiverId,
-    //       message: text, // Assuming the Mongoose schema uses 'message' as the field name
-    //     });
+      try {
+        const newMessage = new Message({
+          senderId,
+          receiverId,
+          message: text,
+        });
     //     await newMessage.save();
-    //     console.log('Message saved:', newMessage);
-    //   } catch (error) {
-    //     console.error('Error saving message:', error);
-    //   }
+        console.log('Message saved:', newMessage);
+      } catch (error) {
+        console.error('Error saving message:', error);
+      }
      });
 
     // Event when user disconnects

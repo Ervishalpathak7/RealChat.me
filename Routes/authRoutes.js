@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { registerUser, loginUser, verifyOtp } from '../Controllers/authController.js';
+import {
+    registerUser,
+    loginUser,
+    verifyOtp,
+    checkAuth
+} from '../Controllers/authController.js';
+import useAuth from '../Middlewares/authMiddleware.js';
 
 const authRouter = Router();
 
@@ -9,7 +15,10 @@ authRouter.post('/register', registerUser);
 // Login Route
 authRouter.post('/login', loginUser);
 
-// verify OTP Route
-authRouter.post('/verify', verifyOtp);
+// Check Auth Status Route
+authRouter.get('/status', useAuth, checkAuth); // More explicit naming
+
+// Verify OTP Route
+authRouter.post('/verify', verifyOtp); // More explicit naming
 
 export default authRouter;
